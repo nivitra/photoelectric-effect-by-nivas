@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoelectric Effect Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="simulator-container">
+        <!-- Header -->
+        <header class="simulator-header">
+            <h1>Photoelectric Effect Simulator</h1>
+            <p>Advanced Laboratory Instrument for Photoelectric Effect Analysis</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="simulator-main">
+            <!-- Left Control Panel -->
+            <section class="control-panel">
+                <div class="card">
+                    <h2>Experimental Parameters</h2>
+                    
+                    <!-- Material Selection -->
+                    <div class="parameter-group">
+                        <label class="form-label">Metal Material</label>
+                        <select id="materialSelect" class="form-control">
+                            <option value="0">Sodium (Na) - 2.28 eV</option>
+                            <option value="1">Potassium (K) - 2.30 eV</option>
+                            <option value="2">Cesium (Cs) - 2.10 eV</option>
+                            <option value="3">Copper (Cu) - 4.70 eV</option>
+                            <option value="4">Silver (Ag) - 4.73 eV</option>
+                            <option value="5">Aluminum (Al) - 4.08 eV</option>
+                            <option value="6">Gold (Au) - 5.10 eV</option>
+                        </select>
+                        <div class="work-function-display">
+                            Work Function: <span id="workFunctionValue">2.28</span> eV
+                        </div>
+                    </div>
+
+                    <!-- Area Control -->
+                    <div class="parameter-group">
+                        <label class="form-label">Metal Plate Area</label>
+                        <div class="slider-container">
+                            <input type="range" id="areaSlider" min="0.01" max="1" step="0.01" value="0.1" class="slider">
+                            <div class="slider-value">
+                                <span id="areaValue">0.10</span> cm²
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wavelength Control -->
+                    <div class="parameter-group">
+                        <label class="form-label">Wavelength</label>
+                        <div class="slider-container">
+                            <input type="range" id="wavelengthSlider" min="100" max="700" step="1" value="400" class="slider">
+                            <div class="slider-value">
+                                <span id="wavelengthValue">400</span> nm
+                            </div>
+                        </div>
+                        <div class="wavelength-color" id="wavelengthColor"></div>
+                    </div>
+
+                    <!-- Intensity Control -->
+                    <div class="parameter-group">
+                        <label class="form-label">Light Intensity</label>
+                        <div class="slider-container">
+                            <input type="range" id="intensitySlider" min="1" max="10" step="0.1" value="5" class="slider">
+                            <div class="slider-value">
+                                <span id="intensityValue">5.0</span> W/m²
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Voltage Control -->
+                    <div class="parameter-group">
+                        <label class="form-label">Applied Voltage</label>
+                        <div class="slider-container">
+                            <input type="range" id="voltageSlider" min="-5" max="5" step="0.1" value="0" class="slider">
+                            <div class="slider-value">
+                                <span id="voltageValue">0.0</span> V
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="button-group">
+                        <button id="lightButton" class="btn btn--primary btn--full-width">Switch On Light</button>
+                        <button id="resetButton" class="btn btn--secondary btn--full-width">Reset Experiment</button>
+                        <button id="exportButton" class="btn btn--outline btn--full-width">Export Data</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Visualization -->
+            <section class="visualization-panel">
+                <div class="card">
+                    <h2>Experimental Setup</h2>
+                    <div class="experiment-setup">
+                        <!-- Light Source -->
+                        <div class="light-source" id="lightSource">
+                            <div class="light-beam" id="lightBeam"></div>
+                            <div class="photons" id="photons"></div>
+                        </div>
+
+                        <!-- Metal Plate -->
+                        <div class="metal-plate" id="metalPlate">
+                            <div class="electrons" id="electrons"></div>
+                        </div>
+
+                        <!-- Measurement Instruments -->
+                        <div class="instruments">
+                            <div class="ammeter">
+                                <div class="display">
+                                    <span class="label">Current</span>
+                                    <span class="value" id="currentDisplay">0.000 µA</span>
+                                </div>
+                            </div>
+                            <div class="voltmeter">
+                                <div class="display">
+                                    <span class="label">Voltage</span>
+                                    <span class="value" id="voltageDisplay">0.0 V</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Messages -->
+                        <div class="status-message" id="statusMessage">
+                            Select parameters and switch on light to begin experiment
+                        </div>
+                    </div>
+
+                    <!-- Calculated Values -->
+                    <div class="calculated-values">
+                        <div class="calc-value">
+                            <span class="calc-label">Threshold Wavelength:</span>
+                            <span id="thresholdWavelength">543 nm</span>
+                        </div>
+                        <div class="calc-value">
+                            <span class="calc-label">Photon Energy:</span>
+                            <span id="photonEnergy">3.10 eV</span>
+                        </div>
+                        <div class="calc-value">
+                            <span class="calc-label">Stopping Potential:</span>
+                            <span id="stoppingPotential">0.82 V</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Data Panel -->
+            <section class="data-panel">
+                <div class="card">
+                    <h2>Data Analysis</h2>
+                    
+                    <!-- Graph -->
+                    <div class="graph-container">
+                        <canvas id="ivChart" width="350" height="250"></canvas>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Voltage (V)</th>
+                                    <th>Avg Current (µA)</th>
+                                    <th>Readings</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBody">
+                                <!-- Data rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Measurement Status -->
+                    <div class="measurement-status">
+                        <div class="status-item">
+                            <span class="label">Measurements:</span>
+                            <span id="measurementCount">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="label">Light Status:</span>
+                            <span id="lightStatus" class="status status--error">OFF</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
